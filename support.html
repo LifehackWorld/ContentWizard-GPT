@@ -1,0 +1,47 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ContentWizard GPT — Вопрос</title>
+<style>
+  :root{ --bg1:#07080b; --bg2:#09090d; --glass-border: rgba(255,255,255,0.06); }
+  *{box-sizing:border-box} html,body{height:100%;margin:0}
+  body{ font-family:Inter,Arial; background:linear-gradient(180deg,var(--bg1),var(--bg2)); color:#fff; padding:22px; -webkit-font-smoothing:antialiased; }
+  .wrap{max-width:760px;margin:0 auto}
+  .header{ text-align:center; margin-bottom:18px }
+  .brand{ font-size:28px; font-weight:700 }
+  .panel{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06)); border-radius:12px; padding:16px; margin-top:12px }
+  .small{ color:rgba(255,255,255,0.8); font-size:14px }
+  /* bottom-nav same as index */
+  .bottom-nav{ position:fixed; left:0; right:0; bottom:14px; display:flex; justify-content:center; pointer-events:none; z-index:9999; }
+  .bottom-nav__inner{ pointer-events:auto; width:calc(100% - 28px); max-width:720px; margin:0 auto; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border-radius:18px; padding:8px 10px; display:flex; gap:8px; align-items:center; justify-content:space-between; box-shadow:0 10px 30px rgba(2,6,12,0.55); backdrop-filter: blur(10px) saturate(120%); border:1px solid var(--glass-border); }
+  .nav-btn{ flex:1; text-align:center; padding:10px 8px; border-radius:12px; cursor:pointer; color:#fff; font-weight:600; font-size:14px; background:transparent; border:none }
+  .nav-btn.active{ background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)); }
+  .content{ padding-bottom:120px } /* space for nav */
+</style>
+</head>
+<body>
+  <div class="wrap content">
+    <header class="header"><div class="brand">Вопрос / Support</div></header>
+
+    <div class="panel">
+      <p class="small">Здесь будет логика раздела «Вопрос» — форма, FAQ, чат, или что ты придумаешь. Пока заглушка.</p>
+      <p class="small" style="margin-top:10px">Когда будешь готов — вставим форму или подключим Webhook.</p>
+    </div>
+  </div>
+
+  <!-- bottom nav -->
+  <nav class="bottom-nav" aria-label="Навигация">
+    <div class="bottom-nav__inner" role="navigation">
+      <button class="nav-btn" onclick="openPage('index.html')">Главная</button>
+      <button class="nav-btn active" onclick="openPage('support.html')">Вопрос</button>
+      <button class="nav-btn" onclick="openPage('account.html')">Профиль</button>
+    </div>
+  </nav>
+
+<script>
+function openPage(p){ location.href = p; }
+</script>
+</body>
+</html>

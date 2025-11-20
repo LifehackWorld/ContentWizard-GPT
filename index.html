@@ -1,0 +1,156 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ContentWizard GPT — Start</title>
+<meta name="color-scheme" content="dark">
+<style>
+  :root{
+    --bg1:#07080b; --bg2:#09090d;
+    --glass-bg: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.06);
+    --accent: #8b5cf6;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    font-family: Inter, Arial, sans-serif;
+    background: linear-gradient(180deg,var(--bg1),var(--bg2));
+    color:#fff;padding:28px 18px;display:flex;justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{width:100%;max-width:760px}
+  .header{text-align:center;margin-bottom:18px}
+  .brand{font-size:36px;font-weight:700;margin:0}
+  .cards{display:flex;flex-direction:column;gap:18px;margin-top:10px}
+
+  /* image-button common */
+  .card-img{
+    width:100%;border-radius:18px;display:block;cursor:pointer;
+    box-shadow:0 8px 30px rgba(2,6,12,0.6);
+    transform: translateY(12px) scale(0.99);
+    opacity:0;
+    transition: transform .36s cubic-bezier(.2,.9,.3,1), box-shadow .2s, opacity .36s;
+    will-change: transform, opacity;
+  }
+  .card-img.visible{ transform: translateY(0) scale(1); opacity:1; }
+  .card-img:hover{ box-shadow:0 26px 60px rgba(2,6,12,0.75); transform: translateY(-6px) scale(1.01); }
+
+  /* parallax tilt */
+  .tilt {
+    transform-origin: center;
+    transition: transform 0.12s ease-out;
+  }
+
+  /* small screens tweak */
+  @media (max-width:420px){ .brand{font-size:28px} }
+
+  /* bottom glass nav (fixed) */
+  .bottom-nav {
+    position: fixed;
+    left: 0; right: 0;
+    bottom: 14px;
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* allow clicks only on buttons */
+    z-index: 9999;
+  }
+  .bottom-nav__inner {
+    pointer-events: auto;
+    width: calc(100% - 28px);
+    max-width:720px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    border-radius: 18px;
+    padding: 8px 10px;
+    display:flex; gap:8px; align-items:center; justify-content:space-between;
+    box-shadow: 0 10px 30px rgba(2,6,12,0.55);
+    backdrop-filter: blur(10px) saturate(120%);
+    border: 1px solid var(--glass-border);
+  }
+  .nav-btn{
+    flex:1; text-align:center; padding:10px 8px; border-radius:12px; cursor:pointer;
+    color:#fff; font-weight:600; font-size:14px; background:transparent; border:none;
+  }
+  .nav-btn svg{ display:block; margin:0 auto 6px; opacity:0.95; }
+  .nav-btn.active{ background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)); }
+
+  /* utility */
+  .sr-only{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="header"><h1 class="brand">ContentWizard GPT</h1></header>
+
+    <main class="cards" id="cards">
+      <!-- 3 image buttons (PNG) -->
+      <img src="img/ideas.png" id="btn1" class="card-img tilt" alt="Идеи для постов" onclick="openPage('ideas.html')" />
+      <img src="img/generate.png" id="btn2" class="card-img tilt" alt="Сгенерировать пост" onclick="openPage('generator.html')" />
+      <img src="img/reels.png" id="btn3" class="card-img tilt" alt="Сценарии Reels" onclick="openPage('reels.html')" />
+    </main>
+  </div>
+
+  <!-- bottom nav (glass) -->
+  <nav class="bottom-nav" aria-label="Навигация">
+    <div class="bottom-nav__inner" role="navigation">
+      <button class="nav-btn active" id="nav-home" onclick="openPage('index.html')">
+        <!-- home svg -->
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M3 10.5L12 4l9 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Главная
+      </button>
+
+      <button class="nav-btn" id="nav-support" onclick="openPage('support.html')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 2v2M6.2 5.2L4.8 6.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Вопрос
+      </button>
+
+      <button class="nav-btn" id="nav-account" onclick="openPage('account.html')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c1.8-3.6 5.2-5 7-5s5.2 1.4 7 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Профиль
+      </button>
+    </div>
+  </nav>
+
+<script>
+/* slide+fade in sequence */
+document.addEventListener('DOMContentLoaded', () => {
+  const items = Array.from(document.querySelectorAll('.card-img'));
+  items.forEach((el, i) => {
+    setTimeout(()=> el.classList.add('visible'), 120 + i*90);
+  });
+});
+
+/* parallax tilt (mouse only) */
+(function(){
+  const supportsTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+  if(supportsTouch) return; // skip tilt on touch devices
+
+  const tiltEls = document.querySelectorAll('.tilt');
+  tiltEls.forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      const rx = (-y) * 6; // rotateX
+      const ry = (x) * 6;  // rotateY
+      el.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+    el.addEventListener('mousedown', ()=> el.style.transform += ' scale(.995)');
+    el.addEventListener('mouseup', ()=> el.style.transform = '');
+  });
+})();
+
+/* navigation helper */
+function openPage(path){
+  // simple location change — in Telegram WebApp it will also work
+  window.location.href = path;
+}
+</script>
+</body>
+</html>
