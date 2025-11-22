@@ -5,18 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ContentWizard GPT — Генерация поста</title>
 <meta name="color-scheme" content="dark">
-
 <style>
   :root{
     --bg1:#07080b; --bg2:#09090d;
-    --card-bg:#11121a; 
-    --card-radius:22px;
-    --accent1:#7c3aed; 
-    --accent2:#a855f7;
+    --card-bg:#11121a; --card-radius:22px;
+    --accent1:#7c3aed; --accent2:#a855f7;
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;padding:0}
-
   body{
     font-family: Inter, Arial, sans-serif;
     background: linear-gradient(180deg,var(--bg1),var(--bg2));
@@ -24,99 +20,62 @@
     padding:24px 18px 100px;
     -webkit-font-smoothing:antialiased;
   }
+  .wrap{max-width:760px;margin:0 auto;width:100%}
 
-  .wrap{
-    max-width:760px;
-    margin:0 auto;
-    width:100%;
-  }
-
-  /* Back */
   .back-btn{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:10px 14px;
-    border-radius:12px;
-    background:#15161a;
-    font-size:15px;
-    cursor:pointer;
-    border:none;
-    color:#fff;
-    box-shadow:0 8px 22px rgba(0,0,0,0.5);
+    display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;
+    background:#15161a;font-size:15px;cursor:pointer;border:none;color:#fff;box-shadow:0 8px 22px rgba(0,0,0,0.5);
     margin-bottom:18px;
   }
 
   .header{text-align:center;margin:10px 0 6px 0}
-  .title-main{
-    font-size:28px;
-    font-weight:800;
-    margin:0 0 6px 0;
-  }
+  .title-main{font-size:28px;font-weight:800;margin:0 0 6px 0;}
 
   .main-card{
-    background:var(--card-bg);
-    border-radius:var(--card-radius);
-    padding:22px;
-    box-shadow:0 12px 40px rgba(0,0,0,0.55);
-    margin-top:12px;
+    background:var(--card-bg);border-radius:var(--card-radius);padding:22px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.55);margin-top:12px;position:relative;
   }
 
-  .block-title{
-    font-size:20px;
-    font-weight:700;
-    margin:0 0 12px 0;
-  }
+  .block-title{font-size:20px;font-weight:700;margin:0 0 12px 0;}
 
   textarea{
-    width:100%;
-    height:170px;
-    padding:16px;
-    border-radius:12px;
-    border:none;
-    background:#0f0f14;
-    color:white;
-    font-size:15px;
-    resize:none;
-    outline:none;
+    width:100%;height:170px;padding:16px;border-radius:12px;border:none;
+    background:#0f0f14;color:white;font-size:15px;resize:none;outline:none;
   }
 
-  /* Fixed button */
   .gen-btn-fixed{
-    position:fixed;
-    left:0; right:0;
-    bottom:20px;
-    width:calc(100% - 36px);
-    max-width:720px;
-    margin:0 auto;
-    padding:14px;
-    border:none;
-    border-radius:14px;
-    font-size:18px;
-    font-weight:700;
-    cursor:pointer;
-    background:linear-gradient(135deg,var(--accent1),var(--accent2));
-    color:#fff;
+    position:fixed;left:0;right:0;bottom:20px;width:calc(100% - 36px);max-width:720px;margin:0 auto;
+    padding:14px;border:none;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;
+    background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;
     box-shadow:0 10px 30px rgba(124,58,237,0.45);
   }
 
   .result-box{
-    display:none;
-    margin-top:18px;
-    padding:16px;
-    background:#121218;
-    border-radius:12px;
-    font-size:15px;
-    color:#e6e6e6;
-    white-space:pre-line;
+    display:none;margin-top:18px;padding:14px;padding-right:56px;
+    background:#121218;border-radius:12px;font-size:15px;color:#e6e6e6;white-space:pre-line;
+    position:relative; word-break:break-word;
   }
+
+  /* copy button inside result */
+  .copy-btn{
+    position:absolute; top:10px; right:10px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08);
+    border-radius:10px; padding:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .copy-btn svg{ width:18px; height:18px; opacity:0.95; }
+  .copy-btn:hover{ background:rgba(255,255,255,0.12); }
+
+  /* toast */
+  .copied-toast{
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: 86px;
+    background: rgba(0,0,0,0.8); color: #fff; padding: 8px 12px; border-radius: 10px; font-size: 13px;
+    opacity: 0; transition: opacity .2s ease; pointer-events:none;
+  }
+  .copied-toast.show{ opacity: 1; }
 </style>
 </head>
-
 <body>
-
 <div class="wrap">
-
   <button class="back-btn" onclick="goBack()">◀ Назад</button>
 
   <header class="header">
@@ -128,50 +87,61 @@
 
     <textarea id="postInput" placeholder="Например: Сделай пост о том, как начать инвестировать…"></textarea>
 
-    <div id="result" class="result-box"></div>
+    <div id="result" class="result-box" aria-live="polite" aria-atomic="true">
+      <button id="copyBtn" class="copy-btn" onclick="copyResult()" title="Скопировать">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="12" height="12" rx="2"></rect>
+          <path d="M5 15V5a2 2 0 0 1 2-2h10"></path>
+        </svg>
+      </button>
+      <div id="resultText"></div>
+    </div>
   </section>
-
 </div>
 
 <button class="gen-btn-fixed" onclick="generatePost()">Сгенерировать</button>
 
+<div id="copiedToast" class="copied-toast">Скопировано в буфер</div>
+
 <script>
-function goBack(){
-  history.back();
-}
+function goBack(){ history.back(); }
 
 function generatePost(){
-  let text = document.getElementById('postInput').value.trim();
-  let out = document.getElementById('result');
+  const input = document.getElementById('postInput').value.trim();
+  const box = document.getElementById('result');
+  const out = document.getElementById('resultText');
+  const copyBtn = document.getElementById('copyBtn');
 
-  if(!text){
-    out.style.display="block";
-    out.innerHTML="❗ Напишите хотя бы тему для генерации.";
+  if(!input){
+    box.style.display='block';
+    out.textContent = '❗ Напишите хотя бы тему для генерации.';
+    copyBtn.style.display = 'none';
     return;
   }
 
-  // Временно — для теста. Потом подключим API GPT.
-  out.style.display="block";
-  out.innerHTML =
-    "✨ Черновой текст поста по вашему запросу:\n\n" +
-    "«" + escapeHtml(text) + "» — отличная тема! Ниже пример того, как можно оформить пост:\n\n" +
-    "— Заголовок: Почему это важно\n" +
-    "— 3 практических совета\n" +
-    "— Личный пример или история\n" +
-    "— Заключение и призыв к действию\n\n" +
-    "⚡ Далее заменим это место на ответ GPT.";
+  const text = `Черновой текст поста по вашему запросу:\n\n«${escapeHtml(input)}» — отличная тема!\n\n— Заголовок: Почему это важно\n— 3 практических совета\n— Личный пример или история\n— Заключение и призыв к действию\n\n(Заменим это место на ответ GPT)`;
+
+  out.textContent = text;
+  box.style.display = 'block';
+  copyBtn.style.display = 'flex';
+  // optional: scroll result into view on mobile
+  setTimeout(()=> box.scrollIntoView({behavior:'smooth', block:'center'}), 60);
+}
+
+function copyResult(){
+  const out = document.getElementById('resultText');
+  const text = out.innerText.trim();
+  if(!text) return;
+  navigator.clipboard.writeText(text).then(()=>{
+    const toast = document.getElementById('copiedToast');
+    toast.classList.add('show');
+    setTimeout(()=> toast.classList.remove('show'), 1100);
+  }, ()=> alert('Не удалось скопировать'));
 }
 
 function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g,m=>({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;',
-    "'":'&#39;'
-  }[m]));
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 </script>
-
 </body>
 </html>
