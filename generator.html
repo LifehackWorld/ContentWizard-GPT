@@ -24,7 +24,8 @@
 
   .back-btn{
     display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;
-    background:#15161a;font-size:15px;cursor:pointer;border:none;color:#fff;box-shadow:0 8px 22px rgba(0,0,0,0.5);
+    background:#15161a;font-size:15px;cursor:pointer;border:none;color:#fff;
+    box-shadow:0 8px 22px rgba(0,0,0,0.5);
     margin-bottom:18px;
   }
 
@@ -38,9 +39,32 @@
 
   .block-title{font-size:20px;font-weight:700;margin:0 0 12px 0;}
 
+  /* TEXTAREA + CLEAR BUTTON */
+  .textarea-wrap{
+    position:relative;
+  }
+
   textarea{
-    width:100%;height:170px;padding:16px;border-radius:12px;border:none;
-    background:#0f0f14;color:white;font-size:15px;resize:none;outline:none;
+    width:100%;height:170px;padding:16px 48px 16px 16px;
+    border-radius:12px;border:none;background:#0f0f14;
+    color:white;font-size:17px;resize:none;outline:none;
+  }
+
+  .clear-btn{
+    position:absolute;
+    top:10px; right:10px;
+    width:26px; height:26px;
+    border-radius:50%;
+    border:none;
+    background:rgba(255,255,255,0.1);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    opacity:0; pointer-events:none;
+    transition:0.15s ease;
+  }
+  .clear-btn svg{ width:16px; height:16px; stroke:#fff; opacity:0.9; }
+  .clear-btn.show{
+    opacity:1; pointer-events:auto;
   }
 
   .gen-btn-fixed{
@@ -65,7 +89,6 @@
   .copy-btn svg{ width:18px; height:18px; opacity:0.95; }
   .copy-btn:hover{ background:rgba(255,255,255,0.12); }
 
-  /* toast */
   .copied-toast{
     position: fixed; left: 50%; transform: translateX(-50%); bottom: 86px;
     background: rgba(0,0,0,0.8); color: #fff; padding: 8px 12px; border-radius: 10px; font-size: 13px;
@@ -76,7 +99,7 @@
 </head>
 <body>
 <div class="wrap">
-  <button class="back-btn" onclick="goBack()">◀ Назад</button>
+  <button class="back-btn" onclick="history.back()">◀ Назад</button>
 
   <header class="header">
     <h1 class="title-main">Сгенерировать пост</h1>
@@ -85,9 +108,17 @@
   <section class="main-card">
     <h2 class="block-title">Введите задачу для генерации</h2>
 
-    <textarea id="postInput" placeholder="Например: Сделай пост о том, как начать инвестировать…"></textarea>
+    <div class="textarea-wrap">
+      <textarea id="postInput" placeholder="Например: Сделай мощный текст про продажи..."></textarea>
+      <button id="clearBtn" class="clear-btn" onclick="clearText()" title="Очистить">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
 
-    <div id="result" class="result-box" aria-live="polite" aria-atomic="true">
+    <div id="result" class="result-box">
       <button id="copyBtn" class="copy-btn" onclick="copyResult()" title="Скопировать">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
           <rect x="9" y="9" width="12" height="12" rx="2"></rect>
@@ -101,46 +132,61 @@
 
 <button class="gen-btn-fixed" onclick="generatePost()">Сгенерировать</button>
 
-<div id="copiedToast" class="copied-toast">Скопировано в буфер</div>
+<div id="copiedToast" class="copied-toast">Скопировано</div>
 
 <script>
-function goBack(){ history.back(); }
+const input = document.getElementById('postInput');
+const clearBtn = document.getElementById('clearBtn');
+
+input.addEventListener('input', ()=>{
+  if(input.value.trim().length > 0){
+    clearBtn.classList.add('show');
+  } else {
+    clearBtn.classList.remove('show');
+  }
+});
+
+function clearText(){
+  input.value = "";
+  clearBtn.classList.remove('show');
+  input.focus();
+}
 
 function generatePost(){
-  const input = document.getElementById('postInput').value.trim();
   const box = document.getElementById('result');
   const out = document.getElementById('resultText');
   const copyBtn = document.getElementById('copyBtn');
 
-  if(!input){
-    box.style.display='block';
-    out.textContent = '❗ Напишите хотя бы тему для генерации.';
-    copyBtn.style.display = 'none';
+  const text = input.value.trim();
+  if(!text){
+    out.textContent = "❗ Напишите тему для генерации.";
+    box.style.display = "block";
+    copyBtn.style.display = "none";
     return;
   }
 
-  const text = `Черновой текст поста по вашему запросу:\n\n«${escapeHtml(input)}» — отличная тема!\n\n— Заголовок: Почему это важно\n— 3 практических совета\n— Личный пример или история\n— Заключение и призыв к действию\n\n(Заменим это место на ответ GPT)`;
+  out.textContent = 
+`Черновой текст поста:
 
-  out.textContent = text;
-  box.style.display = 'block';
-  copyBtn.style.display = 'flex';
-  // optional: scroll result into view on mobile
+Тема: «${text}»
+
+(Здесь будет ответ GPT — заменим позже API запросом.)`;
+
+  box.style.display = "block";
+  copyBtn.style.display = "flex";
+
   setTimeout(()=> box.scrollIntoView({behavior:'smooth', block:'center'}), 60);
 }
 
 function copyResult(){
-  const out = document.getElementById('resultText');
-  const text = out.innerText.trim();
-  if(!text) return;
-  navigator.clipboard.writeText(text).then(()=>{
+  const out = document.getElementById('resultText').innerText.trim();
+  if(!out) return;
+
+  navigator.clipboard.writeText(out).then(()=>{
     const toast = document.getElementById('copiedToast');
     toast.classList.add('show');
     setTimeout(()=> toast.classList.remove('show'), 1100);
-  }, ()=> alert('Не удалось скопировать'));
-}
-
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  });
 }
 </script>
 </body>
