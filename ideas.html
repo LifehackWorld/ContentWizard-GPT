@@ -9,7 +9,7 @@
 <style>
   :root{
     --bg1:#07080b; --bg2:#09090d;
-    --card-bg:#212121; --card-radius:22px;
+    --card-bg:212121; --card-radius:22px;
     --accent1:#7c3aed; --accent2:#2F4F4F;
   }
   *{box-sizing:border-box}
@@ -53,7 +53,7 @@
 
   .block-title{font-size:20px;font-weight:700;margin:0 0 12px 0}
 
-  /* input + крестик */
+  /* Input wrapper */
   .input-wrap{
     position:relative;
     width:100%;
@@ -62,30 +62,43 @@
 
   .input{
     width:100%;
-    padding:14px 45px 14px 16px;
+    padding:14px 16px;
+    padding-right:46px;
     border-radius:12px;
     border:none;
     background:#0f0f14;
     color:white;
-    font-size:18px; /* увеличили */
+    font-size:18px;
     outline:none;
   }
 
+  /* круглый крестик */
   .clear-btn{
     position:absolute;
     right:12px;
     top:50%;
     transform:translateY(-50%);
-    font-size:20px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:#1c1c22;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:18px;
     color:#888;
     cursor:pointer;
-    display:none;
     user-select:none;
+    border:1px solid #2b2b33;
+    display:none;
   }
 
-  .clear-btn:hover{color:#bbb;}
+  .clear-btn:hover{
+    background:#22222a;
+    color:#ccc;
+  }
 
-  /* fixed bottom button */
+  /* Bottom button */
   .gen-btn-fixed{
     position:fixed;
     left:0; right:0;
@@ -106,13 +119,12 @@
 
   .result{
     margin-top:16px;
-    padding:16px;
+    padding:14px;
     background:#121218;
     border-radius:10px;
     display:none;
     color:#e6e6e6;
-    font-size:17px; /* увеличили шрифт */
-    line-height:1.45;
+    font-size:18px;
   }
 </style>
 </head>
@@ -138,6 +150,7 @@
     </section>
   </div>
 
+  <!-- Bottom generate button -->
   <button class="gen-btn-fixed" onclick="generateIdeas()">
     Сгенерировать
   </button>
@@ -145,19 +158,19 @@
 <script>
   function goBack(){ history.back(); }
 
-  const topicInput = document.getElementById('topic');
-  const clearBtn = document.getElementById('clearTopic');
+  const topicInput = document.getElementById("topic");
+  const clearBtn = document.getElementById("clearTopic");
 
-  /* показываем крестик когда есть текст */
-  topicInput.addEventListener('input', () => {
-    clearBtn.style.display = topicInput.value.length > 0 ? 'block' : 'none';
+  /* показать / скрыть крестик */
+  topicInput.addEventListener("input", () => {
+    clearBtn.style.display = topicInput.value ? "flex" : "none";
   });
 
   /* очистка */
-  clearBtn.addEventListener('click', () => {
+  clearBtn.addEventListener("click", () => {
     topicInput.value = "";
     clearBtn.style.display = "none";
-    document.getElementById('result').style.display = "none";
+    topicInput.focus();
   });
 
   function generateIdeas(){
@@ -173,11 +186,11 @@
     out.style.display="block";
     out.innerHTML =
       `<strong>Идеи по теме «${escapeHtml(topic)}»:</strong><br><br>
-       ▪ Как изменить подход к ${escapeHtml(topic)}<br>
-       ▪ 5 ошибок в ${escapeHtml(topic)}<br>
-       ▪ Неожиданный факт о ${escapeHtml(topic)}<br>
-       ▪ Как начать заниматься ${escapeHtml(topic)}<br>
-       ▪ Почему ${escapeHtml(topic)} — тренд 2025<br>`;
+       • Как изменить подход к ${escapeHtml(topic)}<br>
+       • 5 ошибок в ${escapeHtml(topic)}<br>
+       • Неожиданный факт о ${escapeHtml(topic)}<br>
+       • Как начать заниматься ${escapeHtml(topic)}<br>
+       • Почему ${escapeHtml(topic)} — тренд 2025<br>`;
   }
 
   function escapeHtml(s){
@@ -189,6 +202,7 @@
 
 </body>
 </html>
+
 
 
 
