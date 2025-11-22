@@ -33,7 +33,6 @@
     font-size:15px;
     cursor:pointer; border:none; color:#fff;
   }
-  .back-btn:hover{ transform:translateY(-3px); }
 
   .header{ text-align:center; margin:18px 0 6px 0 }
   .title-main{ font-size:28px; font-weight:800; margin:0 0 6px 0 }
@@ -52,7 +51,7 @@
     padding:14px 16px;
     border-radius:12px;
     border:none;
-    font-size:16px;
+    font-size:17px; /* увеличено */
     outline:none;
     margin-bottom:16px;
     background:#0f0f14;
@@ -60,43 +59,51 @@
   }
   textarea{ min-height:120px; resize:vertical; }
 
-  /* Кнопка внизу вместо меню */
-  .gen-fixed{
-    position:fixed;
-    left:0; right:0; bottom:18px;
-    width:calc(100% - 28px);
-    max-width:720px;
-    margin:0 auto;
-  }
-
-  .gen-btn{
+  /* Крестик в кружке */
+  .field-wrap{
+    position:relative;
     width:100%;
-    padding:15px;
-    border:none;
-    border-radius:16px;
-    font-size:18px;
-    font-weight:700;
+  }
+  .clear-btn{
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.12);
+    display:flex;
+    align-items:center;
+    justify-content:center;
     cursor:pointer;
-    background:linear-gradient(135deg,var(--accent1),var(--accent2));
-    color:#fff;
-    box-shadow:0 10px 30px rgba(124,58,237,0.45);
+    opacity:0;
+    transition:.2s;
+  }
+  .clear-btn svg{
+    width:14px;
+    height:14px;
+    opacity:0.85;
+  }
+  .field-wrap.has-text .clear-btn{
+    opacity:1;
   }
 
+  /* кнопка копирования */
   .result{
     margin-top:16px;
-    padding:14px 14px 14px 14px; /* left/top/bottom/right — right увеличим отдельно */
-    padding-right:56px; /* место под кнопку копирования */
+    padding:14px;
+    padding-right:56px;
     background:#121218;
     border-radius:14px;
     display:none;
     color:#e6e6e6;
     font-size:15px;
     line-height:1.45;
-    position:relative; /* ВАЖНО: кнопка копирования позиционируется внутри */
+    position:relative;
     word-break:break-word;
   }
 
-  /* Кнопка копирования внутри блока результата */
   .copy-btn{
     position:absolute;
     top:10px;
@@ -110,10 +117,8 @@
     align-items:center;
     justify-content:center;
   }
-  .copy-btn svg{ opacity:0.95; width:18px; height:18px; }
-  .copy-btn:hover{ background:rgba(255,255,255,0.12); }
+  .copy-btn svg{ width:18px; height:18px; opacity:0.95; }
 
-  /* маленькое уведомление копирования */
   .copied-toast{
     position: fixed;
     left: 50%;
@@ -129,98 +134,133 @@
     pointer-events:none;
   }
   .copied-toast.show{ opacity: 1; }
+
+  .gen-fixed{
+    position:fixed;
+    left:0; right:0; bottom:18px;
+    width:calc(100% - 28px);
+    max-width:720px;
+    margin:0 auto;
+  }
+  .gen-btn{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:16px;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+    background:linear-gradient(135deg,var(--accent1),var(--accent2));
+    color:#fff;
+    box-shadow:0 10px 30px rgba(124,58,237,0.45);
+  }
 </style>
 </head>
 <body>
 
 <div class="wrap">
 
-  <button class="back-btn" onclick="goBack()">◀ Назад</button>
+  <button class="back-btn" onclick="history.back()">◀ Назад</button>
 
   <header class="header">
     <h1 class="title-main">Сценарии Reels</h1>
   </header>
 
   <section class="main-card" aria-labelledby="heading">
-    <h2 id="heading" class="block-title">Выбери тему для Reels</h2>
+    <h2 id="heading" class="block-title">Выбери тему</h2>
 
-    <input id="topic" placeholder="Тема (пример: бюджетные поездки, рецепты за 5 минут)" />
-    <textarea id="notes" placeholder="Доп. пожелания: длительность, стиль, ЦА..."></textarea>
+    <!-- поле 1 -->
+    <div class="field-wrap">
+      <input id="topic" placeholder="Тема Reels" />
+      <div class="clear-btn" onclick="clearField('topic', this)">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </div>
+    </div>
 
-    <div id="result" class="result" aria-live="polite" aria-atomic="true">
-      <!-- кнопка копировать в DOM всегда одна, она не меняет размер блока -->
-      <button id="copyBtn" class="copy-btn" onclick="copyResult()" title="Скопировать">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- поле 2 -->
+    <div class="field-wrap">
+      <textarea id="notes" placeholder="Доп. пожелания"></textarea>
+      <div class="clear-btn" onclick="clearField('notes', this)">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </div>
+    </div>
+
+    <div id="result" class="result">
+      <button id="copyBtn" class="copy-btn" onclick="copyResult()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
           <rect x="9" y="9" width="12" height="12" rx="2"></rect>
           <path d="M5 15V5a2 2 0 0 1 2-2h10"></path>
         </svg>
       </button>
-      <div id="resultText"><!-- сюда пишем только текст, без кнопки --></div>
+      <div id="resultText"></div>
     </div>
   </section>
-
 </div>
 
-<!-- кнопка внизу вместо меню -->
 <div class="gen-fixed">
   <button class="gen-btn" onclick="generateReels()">Сгенерировать</button>
 </div>
 
-<!-- маленькое уведомление "скопировано" -->
-<div id="copiedToast" class="copied-toast">Скопировано в буфер</div>
+<div id="copiedToast" class="copied-toast">Скопировано</div>
 
 <script>
-  function goBack(){ history.back(); }
+  // показываем крестики
+  document.querySelectorAll('.field-wrap').forEach(w=>{
+    const input = w.querySelector('input, textarea');
+    input.addEventListener('input',()=>{
+      if(input.value.trim()!=="") w.classList.add('has-text');
+      else w.classList.remove('has-text');
+    });
+  });
+
+  function clearField(id, el){
+    const field = document.getElementById(id);
+    field.value="";
+    el.parentElement.classList.remove('has-text');
+    field.focus();
+  }
 
   function generateReels(){
-    const topicEl = document.getElementById('topic');
-    const notesEl = document.getElementById('notes');
+    const topicValue = document.getElementById('topic').value.trim();
+    const notesValue = document.getElementById('notes').value.trim();
+
     const box = document.getElementById('result');
     const out = document.getElementById('resultText');
 
-    const topic = topicEl.value.trim();
-    const notesVal = notesEl.value.trim();
-
-    if(!topic){
+    if(!topicValue){
       box.style.display="block";
-      out.textContent = '❗ Введите тему для Reels.';
+      out.textContent = '❗ Введите тему.';
       return;
     }
 
-    const text = `Сценарий Reels по теме «${escapeHtml(topic)}»
+    const text = `Сценарий Reels по теме «${topicValue}»
 
-1) Крючок (0–3 сек): мгновенный визуальный захват
-2) 2–3 ключевых шага (3–12 сек): быстрые надписи и динамичные смены планов
-3) Результат/до–после (12–20 сек)
-4) Призыв: «Сохраните, если полезно» (20–25 сек)
+1) Крючок (0–3 сек)
+2) Основной контент (3–12 сек)
+3) Результат (12–20 сек)
+4) Призыв (20–25 сек)
 
-Пожелания: ${notesVal || 'не указаны'}`;
+Пожелания: ${notesValue || "не указаны"}`;
 
-    out.textContent = text;          // вставляем только текст
-    box.style.display = 'block';
-    // прокрутка к результату (на мобилях полезно)
-    setTimeout(()=> box.scrollIntoView({behavior:'smooth', block:'center'}), 50);
+    out.textContent = text;
+    box.style.display = "block";
   }
 
   function copyResult(){
-    const out = document.getElementById('resultText');
-    const text = out.innerText.trim();
+    const text = resultText.innerText.trim();
     if(!text) return;
 
-    // копируем текст в буфер обмена
-    navigator.clipboard.writeText(text).then(()=> {
+    navigator.clipboard.writeText(text).then(()=>{
       const toast = document.getElementById('copiedToast');
       toast.classList.add('show');
       setTimeout(()=> toast.classList.remove('show'), 1100);
-    }, ()=> {
-      alert('Не удалось скопировать');
     });
-  }
-
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
-    }[m]));
   }
 </script>
 
