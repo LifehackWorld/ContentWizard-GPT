@@ -9,8 +9,8 @@
 <style>
   :root{
     --bg1:#07080b; --bg2:#09090d;
-    --card-bg:#11121a; --card-radius:22px;
-    --accent1:#7c3aed; --accent2:#a855f7;
+    --card-bg:#212121; --card-radius:22px;
+    --accent1:#7c3aed; --accent2:#2F4F4F;
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;padding:0}
@@ -53,19 +53,39 @@
 
   .block-title{font-size:20px;font-weight:700;margin:0 0 12px 0}
 
+  /* input + крестик */
+  .input-wrap{
+    position:relative;
+    width:100%;
+    margin-bottom:16px;
+  }
+
   .input{
     width:100%;
-    padding:14px 16px;
+    padding:14px 45px 14px 16px;
     border-radius:12px;
-    margin-bottom:16px;
     border:none;
     background:#0f0f14;
     color:white;
-    font-size:16px;
+    font-size:18px; /* увеличили */
     outline:none;
   }
 
-  /* New fixed bottom button */
+  .clear-btn{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:20px;
+    color:#888;
+    cursor:pointer;
+    display:none;
+    user-select:none;
+  }
+
+  .clear-btn:hover{color:#bbb;}
+
+  /* fixed bottom button */
   .gen-btn-fixed{
     position:fixed;
     left:0; right:0;
@@ -86,12 +106,13 @@
 
   .result{
     margin-top:16px;
-    padding:14px;
+    padding:16px;
     background:#121218;
     border-radius:10px;
     display:none;
     color:#e6e6e6;
-    font-size:15px;
+    font-size:17px; /* увеличили шрифт */
+    line-height:1.45;
   }
 </style>
 </head>
@@ -107,14 +128,16 @@
     <section class="main-card">
       <h2 class="block-title">На какую тему сделать пост?</h2>
 
-      <input id="topic" class="input"
-        placeholder="Например: путешествия, барбершоп, кофе…"/>
+      <div class="input-wrap">
+        <input id="topic" class="input"
+          placeholder="Например: путешествия, барбершоп, кофе…"/>
+        <span class="clear-btn" id="clearTopic">×</span>
+      </div>
 
       <div id="result" class="result"></div>
     </section>
   </div>
 
-  <!-- Bottom generate button -->
   <button class="gen-btn-fixed" onclick="generateIdeas()">
     Сгенерировать
   </button>
@@ -122,8 +145,23 @@
 <script>
   function goBack(){ history.back(); }
 
+  const topicInput = document.getElementById('topic');
+  const clearBtn = document.getElementById('clearTopic');
+
+  /* показываем крестик когда есть текст */
+  topicInput.addEventListener('input', () => {
+    clearBtn.style.display = topicInput.value.length > 0 ? 'block' : 'none';
+  });
+
+  /* очистка */
+  clearBtn.addEventListener('click', () => {
+    topicInput.value = "";
+    clearBtn.style.display = "none";
+    document.getElementById('result').style.display = "none";
+  });
+
   function generateIdeas(){
-    const topic = document.getElementById('topic').value.trim();
+    const topic = topicInput.value.trim();
     const out = document.getElementById('result');
 
     if(!topic){
@@ -151,5 +189,6 @@
 
 </body>
 </html>
+
 
 
