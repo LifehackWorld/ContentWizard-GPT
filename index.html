@@ -1,0 +1,232 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ContentWizard GPT — Start</title>
+
+<style>
+/* ──────────────────────────────────────────── */
+/* 🔥 LIGHT THEME — автоматическая, iOS-style   */
+/* ──────────────────────────────────────────── */
+@media (prefers-color-scheme: light) {
+  :root {
+    --page-bg: #ffffff;
+    --nav-bg: #f9f9f9;
+    --nav-border: rgba(0,0,0,0.1);
+    --text-muted: #6c6c6c;
+    --ios-blue: #007aff;
+  }
+
+  body { background: var(--page-bg); color:#000; }
+  .brand { color:#000; }
+
+  .card-img {
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  }
+  .card-img:hover {
+    box-shadow: 0 16px 38px rgba(0,0,0,0.18);
+  }
+
+  .bottom-nav__inner {
+    background: var(--nav-bg);
+    border: 1px solid var(--nav-border);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.14);
+  }
+
+  .tab { color: var(--text-muted); }
+  .tab.active { color: var(--ios-blue); }
+
+  .tab .icon { color: var(--text-muted); }
+  .tab.active .icon { color: var(--ios-blue); }
+
+  .brand { color:#000; }
+}
+
+/* ──────────────────────────────────────────── */
+/* DARK THEME (основная)                        */
+/* ──────────────────────────────────────────── */
+:root{
+  --page-bg: #262626;
+  --nav-bg: #1b1b1b;
+  --nav-border: rgba(255,255,255,0.06);
+  --text-muted: #9b9b9b;
+  --ios-blue: #0a84ff;
+  --glass-blur: 8px;
+  --tab-height: 70px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--page-bg);
+  color:#fff;
+  padding: 18px 18px 94px 18px;
+  display:flex;
+  justify-content:center;
+}
+
+/* layout */
+.wrap{width:100%;max-width:760px}
+.header{text-align:center;margin-bottom:12px}
+.brand{font-size:36px;font-weight:700;margin:0}
+.cards{display:flex;flex-direction:column;gap:18px;margin-top:10px}
+
+/* ───── image buttons (PNG) ───── */
+.card-img{
+  width:100%;
+  border-radius:18px;
+  display:block;
+  cursor:pointer;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  transition: transform .25s ease, box-shadow .23s ease;
+}
+.card-img:hover{
+  transform: translateY(-5px);
+  box-shadow: 0 22px 55px rgba(0,0,0,0.6);
+}
+
+/* tilt fx */
+.tilt { transform-origin:center; transition:transform .12s ease-out; }
+
+/* ──────────────────────────────────────────── */
+/* BOTTOM NAV — iOS style                       */
+/* ──────────────────────────────────────────── */
+.bottom-nav{
+  position:fixed;
+  left:0; right:0;
+  bottom:12px;
+  display:flex;
+  justify-content:center;
+  pointer-events:none;
+  z-index:9999;
+}
+
+.bottom-nav__inner{
+  pointer-events:auto;
+  width:calc(100% - 28px);
+  max-width:760px;
+  height:var(--tab-height);
+  background:var(--nav-bg);
+  border-radius:14px;
+  padding:8px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border:1px solid var(--nav-border);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow:0 12px 32px rgba(0,0,0,0.55);
+}
+
+.tab{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  text-decoration:none;
+  width:22%;
+  color:var(--text-muted);
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+  border-radius:10px;
+  padding:6px 6px;
+  -webkit-tap-highlight-color: transparent;
+  transition: color .12s ease;
+}
+
+.tab.active{
+  color:var(--ios-blue);
+}
+
+.tab .icon{
+  width:22px;
+  height:22px;
+  display:block;
+  color:inherit; /* ← важно для автоперекраски */
+}
+
+/* mobile tweaks */
+@media(max-width:420px){
+  .brand{font-size:28px}
+  .bottom-nav__inner{height:66px;padding:6px 10px;border-radius:12px}
+  .tab span{font-size:10px}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <header class="header"><h1 class="brand">ContentWizard GPT</h1></header>
+
+  <main class="cards">
+    <img src="img/ideas.png" class="card-img tilt" onclick="openPage('ideas.html')" alt="Идеи"/>
+    <img src="img/generate.png" class="card-img tilt" onclick="openPage('generator.html')" alt="Генерация"/>
+    <img src="img/reels.png" class="card-img tilt" onclick="openPage('reels.html')" alt="Reels"/>
+  </main>
+</div>
+
+<!-- ───────── Bottom Navigation ───────── -->
+<nav class="bottom-nav">
+  <div class="bottom-nav__inner">
+
+    <!-- HOME -->
+    <a class="tab active" id="tab-home" onclick="openPage('index.html')">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 11L12 3l9 8"/>
+        <path d="M5 10v10h5V15h4v5h5V10"/>
+      </svg>
+      <span>Главная</span>
+    </a>
+
+    <!-- TAB 2 -->
+    <a class="tab" id="tab-2">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4m0 4h.01"/>
+      </svg>
+      <span>Раздел 2</span>
+    </a>
+
+    <!-- TAB 3 -->
+    <a class="tab" id="tab-3">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="15" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      <span>Раздел 3</span>
+    </a>
+
+    <!-- PROFILE -->
+    <a class="tab" id="tab-account" onclick="openPage('account.html')">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M6 20c1.5-3 4-4 6-4s4.5 1 6 4"/>
+      </svg>
+      <span>Профиль</span>
+    </a>
+
+  </div>
+</nav>
+
+<script>
+function openPage(p){ window.location.href = p; }
+
+/* tilt fx */
+document.querySelectorAll('.tilt').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r=el.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-0.5;
+    const y=(e.clientY-r.top)/r.height-0.5;
+    el.style.transform=`perspective(700px) rotateX(${ -y*5 }deg) rotateY(${ x*5 }deg) scale(1.02)`;
+  });
+  el.addEventListener('mouseleave',()=>el.style.transform="");
+});
+</script>
+
+</body>
+</html>
