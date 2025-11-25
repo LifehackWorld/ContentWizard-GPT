@@ -10,6 +10,7 @@
     --bg1:#262626; --bg2:#262626;
     --card-bg:#1b1b1b; --card-radius:22px;
     --accent1:#7c3aed; --accent2:#a855f7;
+    --nav-border: rgba(255,255,255,0.05);
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0}
@@ -50,14 +51,14 @@
     width:100%;
     padding:14px 16px;
     border-radius:12px;
-    border:none;
-    font-size:18px; /* увеличено */
+    border: 1px solid var(--nav-border);
+    font-size:17px; /* увеличено */
     outline:none;
     margin-bottom:16px;
     background:#262626;
     color:white;
   }
-  textarea{ min-height:120px; resize:vertical; }
+  textarea{ min-height:100px; resize:vertical; }
 
   /* Крестик в кружке */
   .field-wrap{
@@ -97,9 +98,10 @@
     padding-right:56px;
     background:#262626;
     border-radius:14px;
+    border: 1px solid var(--nav-border);
     display:none;
     color:#e6e6e6;
-    font-size:18px;
+    font-size:17px;
     line-height:1.45;
     position:relative;
     word-break:break-word;
@@ -267,19 +269,5 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
