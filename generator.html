@@ -10,6 +10,7 @@
     --bg1:#262626; --bg2:#262626;
     --card-bg:#1b1b1b; --card-radius:22px;
     --accent1:#7c3aed; --accent2:#a855f7;
+    --nav-border: rgba(255,255,255,0.05);
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;padding:0}
@@ -49,10 +50,10 @@
     height:170px;
     padding:16px 48px 16px 16px;
     border-radius:12px;
-    border:none;
+    border: 1px solid var(--nav-border);
     background: #262626;
     color:white;
-    font-size:18px;
+    font-size:17px;
     resize:none;
     outline:none;
   }
@@ -101,7 +102,8 @@
     padding-right:56px;
     background:#262626;
     border-radius:12px;
-    font-size:18px;
+    border: 1px solid var(--nav-border);
+    font-size:17px;
     color:#e6e6e6;
     white-space:pre-line;
     position:relative;
@@ -219,15 +221,3 @@ function copyResult(){
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
