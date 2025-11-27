@@ -1,40 +1,164 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ru">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ContentWizard GPT — Профиль</title>
-<style>
-  :root{ --bg1:#262626; --bg2:#262626; --glass-border: rgba(255,255,255,0.06); --accent:#8b5cf6 }
-  *{box-sizing:border-box} html,body{height:100%;margin:0}
-  body{ font-family:Inter,Arial; background:linear-gradient(180deg,var(--bg1),var(--bg2)); color:#fff; padding:18px; -webkit-font-smoothing:antialiased; }
-  .wrap{max-width:760px;margin:0 auto}
-  .header{ text-align:center; margin-bottom:10px }
-  .brand{ font-size:28px; font-weight:700 }
-  .card{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05)); border-radius:12px; padding:14px; margin-top:12px }
-  .field{ width:100%; padding:10px; border-radius:10px; background:#0e1113; border:1px solid rgba(255,255,255,0.03); color:#fff; margin-top:8px }
-  .btn{ display:inline-block; padding:10px 14px; border-radius:10px; background:var(--accent); color:#fff; border:none; cursor:pointer; font-weight:700; margin-top:10px }
-  .muted{ color:rgba(255,255,255,0.75); font-size:14px }
-  .small{ color:rgba(255,255,255,0.8); font-size:13px }
 
-  /* bottom nav spacing */
-  .content{ padding-bottom:120px }
-  /* bottom-nav style same */
-  .bottom-nav{ position:fixed; left:0; right:0; bottom:14px; display:flex; justify-content:center; pointer-events:none; z-index:9999; }
-  .bottom-nav__inner{ pointer-events:auto; width:calc(100% - 28px); max-width:720px; margin:0 auto; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border-radius:18px; padding:8px 10px; display:flex; gap:8px; align-items:center; justify-content:space-between; box-shadow:0 10px 30px rgba(2,6,12,0.55); backdrop-filter: blur(10px) saturate(120%); border:1px solid var(--glass-border); }
-  .nav-btn{ flex:1; text-align:center; padding:10px 8px; border-radius:12px; cursor:pointer; color:#fff; font-weight:600; font-size:14px; background:transparent; border:none }
-  .nav-btn.active{ background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)); }
+<style>
+  :root{
+    --page-bg: #262626;
+    --nav-bg: #1b1b1b;
+    --nav-border: rgba(255,255,255,0.20);
+    --text-muted: #9b9b9b;
+    --ios-blue: #007aff;
+    --glass-blur: 8px;
+    --tab-height: 70px;
+    --card-bg: #303030;
+    --accent: #007aff;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    background: var(--page-bg);
+    color: #fff;
+    padding: 18px 18px 94px 18px; /* нижний padding чтобы контент не попадал под таббар */
+    display:flex;
+    justify-content:center;
+  }
+
+  .wrap{width:100%;max-width:760px}
+  .header{text-align:center;margin-bottom:12px}
+  .brand{font-size:28px;font-weight:700;margin:0;color:#fff}
+  .cards{display:flex;flex-direction:column;gap:18px;margin-top:10px}
+
+  /* Cards / form */
+  .card{
+    background: var(--card-bg);
+    border-radius:16px;
+    padding:16px;
+    margin-top:12px;
+  }
+  .small{ font-size:14px; color:var(--text-muted); margin-bottom:6px; display:block; }
+  .muted{ color:var(--text-muted); font-size:14px; margin-top:8px; }
+
+  .field{
+    width:100%;
+    padding:12px;
+    font-size:15px;
+    border-radius:10px;
+    background:#2a2a2a;
+    border:1px solid rgba(255,255,255,0.06);
+    color:#fff;
+    box-sizing:border-box;
+  }
+
+  .btn{
+    margin-top:12px;
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    background:var(--accent);
+    border:none;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    font-size:15px;
+  }
+
+  /* Image buttons (if any) */
+  .card-img{ width:100%; border-radius:18px; display:block; }
+
+  /* --------- Bottom nav styles copied from index (iOS-like) --------- */
+  .bottom-nav {
+    position: fixed;
+    left: 0; right: 0;
+    bottom: 12px;
+    display:flex;
+    justify-content:center;
+    pointer-events: none; /* allow clicks only on inner area */
+    z-index: 9999;
+  }
+
+  .bottom-nav__inner {
+    pointer-events: auto;
+    width: calc(100% - 28px);
+    max-width: 760px;
+    margin: 0 auto;
+    height: var(--tab-height);
+    background: var(--nav-bg);
+    border-radius: 14px;
+    padding: 8px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    border: 1px solid var(--nav-border);
+    backdrop-filter: blur(var(--glass-blur));
+  }
+
+  .tab {
+    -webkit-tap-highlight-color: transparent;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    width: 22%;
+    min-width: 56px;
+    text-decoration:none;
+    color: var(--text-muted);
+    font-size:11px;
+    font-weight:600;
+    cursor:pointer;
+    border-radius:10px;
+    padding:6px 6px;
+    transition: background .12s ease, color .12s ease, transform .08s ease;
+  }
+
+  .tab:active { transform: translateY(1px); }
+
+  .tab .icon {
+    width:22px;
+    height:22px;
+    display:block;
+    margin-bottom:2px;
+    opacity:0.96;
+    filter: none;
+  }
+
+  .tab.active {
+    color: var(--ios-blue);
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  }
+
+  /* Active icon color via currentColor - SVGs use fill="currentColor" */
+  .tab.active .icon { color: var(--ios-blue); }
+
+  .tab span { font-size:11px; line-height:1; color:inherit; }
+
+  @media (max-width:420px){
+    .brand{font-size:24px}
+    .bottom-nav__inner{height:66px;padding:6px 10px;border-radius:12px}
+    .tab span{font-size:10px}
+  }
+  /* ------------------------------------------------------------------ */
+
 </style>
 </head>
 <body>
-  <div class="wrap content">
-    <header class="header"><div class="brand">Профиль</div></header>
+  <div class="wrap">
+    <header class="header"><h1 class="brand">Профиль</h1></header>
 
     <div class="card">
-      <div class="small">Войти по номеру телефона</div>
+      <label class="small" for="phone">Войти по номеру телефона</label>
       <input id="phone" class="field" type="tel" placeholder="+7 (900) 000-00-00" />
       <button class="btn" onclick="requestPhone()">Получить код</button>
-      <div class="muted" style="margin-top:8px">После подтверждения номера появится доступ к истории и подписке.</div>
+      <div class="muted">После подтверждения номера появится доступ к истории и подписке.</div>
     </div>
 
     <div class="card">
@@ -47,24 +171,78 @@
       <div class="small">История генераций</div>
       <p class="muted">Список твоих прошлых запросов будет здесь. Пока пусто.</p>
     </div>
+
   </div>
 
-  <!-- bottom nav -->
+  <!-- bottom nav (copied from index) -->
   <nav class="bottom-nav" aria-label="Навигация">
     <div class="bottom-nav__inner" role="navigation">
-      <button class="nav-btn" onclick="openPage('index.html')">Главная</button>
-      <button class="nav-btn" onclick="openPage('support.html')">Вопрос</button>
-      <button class="nav-btn active" onclick="openPage('account.html')">Профиль</button>
+      <!-- Tab 1: Home -->
+      <a class="tab" id="tab-home" onclick="onTabClick('home')">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+          <path d="M12 3.2c-.3 0-.6.1-.8.3L3.1 9.6c-.5.4-.6 1.1-.2 1.6.4.5 1.1.6 1.6.2L6 10.8V19c0 1 .8 1.8 1.8 1.8H9.9c1 0 1.8-.8 1.8-1.8V15.5h1.6V19c0 1 .8 1.8 1.8 1.8h1.9c1 0 1.8-.8 1.8-1.8v-8.2l1.5 1.1c.5.4 1.2.3 1.6-.2.4-.5.3-1.2-.2-1.6L12.8 3.5c-.2-.2-.5-.3-.8-.3z"/>
+        </svg>
+        <span>Главная</span>
+      </a>
+
+      <!-- Tab 2: Placeholder -->
+      <a class="tab" id="tab-2" onclick="onTabClick('tab2')">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+          <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14h-2v-2h2v2zm0-4h-2V6h2v6z"/>
+        </svg>
+        <span>Раздел 2</span>
+      </a>
+
+      <!-- Tab 3: Placeholder -->
+      <a class="tab" id="tab-3" onclick="onTabClick('tab3')">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+          <path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"/>
+        </svg>
+        <span>Раздел 3</span>
+      </a>
+
+      <!-- Tab 4: Profile (active) -->
+      <a class="tab active" id="tab-account" onclick="onTabClick('account')">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+          <path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-6.7-5-8-5z"/>
+        </svg>
+        <span>Профиль</span>
+      </a>
     </div>
   </nav>
 
 <script>
-function openPage(p){ location.href = p; }
+/* tab click handling — same as index */
+function openPage(path){ window.location.href = path; }
+
+function onTabClick(key){
+  // clear active
+  document.querySelectorAll('.bottom-nav__inner .tab').forEach(t => t.classList.remove('active'));
+  let el;
+  switch(key){
+    case 'home': el = document.getElementById('tab-home'); openPage('index.html'); break;
+    case 'account': el = document.getElementById('tab-account'); openPage('account.html'); break;
+    case 'tab2': el = document.getElementById('tab-2'); break;
+    case 'tab3': el = document.getElementById('tab-3'); break;
+    default: el = document.getElementById('tab-home'); break;
+  }
+  if(el) el.classList.add('active');
+}
+
+/* small helpers */
 function requestPhone(){
   const phone = document.getElementById('phone').value.trim();
-  if(!phone){ alert('Введите номер телефона'); return; }
-  alert('Заглушка: код отправлен на ' + phone + '. Реализацию подключим позже.');
+  if(!phone){ alert('Введите номер'); return; }
+  alert('Заглушка: код отправлен на ' + phone);
 }
+
+/* Telegram WebApp expand */
+try{
+  if(window.Telegram?.WebApp){
+    const tg = window.Telegram.WebApp;
+    tg.ready(); tg.expand?.();
+  }
+}catch(e){}
 </script>
 </body>
 </html>
